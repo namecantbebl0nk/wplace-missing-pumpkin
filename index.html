@@ -12,6 +12,7 @@
     --text: #111827;
     --muted: #6b7280;
     --border: #e5e7eb;
+    --result-bg: #f3f4f6;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -22,10 +23,10 @@
       --text: #f9fafb;
       --muted: #9ca3af;
       --border: #374151;
+      --result-bg: #1e293b;
     }
 
     textarea, #result {
-      background-color: #1e293b;
       color: #f1f5f9;
     }
 
@@ -81,7 +82,8 @@
     border: 1px solid var(--border);
     border-radius: 8px;
     resize: vertical;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+    background-color: var(--result-bg);
   }
 
   textarea:focus {
@@ -114,7 +116,7 @@
   #result {
     margin-top: 20px;
     white-space: pre-line;
-    background: #f3f4f6;
+    background: var(--result-bg);
     padding: 12px;
     border-radius: 8px;
     font-size: 0.95rem;
