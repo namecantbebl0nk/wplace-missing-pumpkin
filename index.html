@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Missing Numbers Calculator</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  textarea { width: 100%; height: 100px; }
+  #result { margin-top: 20px; white-space: pre-line; }
+  button { margin-top: 10px; padding: 10px 20px; }
+</style>
+</head>
+<body>
+
+<h2>Missing Numbers Calculator (1–100)</h2>
+<p>Enter your numbers separated by commas:</p>
+<textarea id="numbersInput" placeholder="e.g. 35,19,84,53,..."></textarea>
+<br>
+<button onclick="calculateMissing()">Calculate Missing Numbers</button>
+
+<div id="result"></div>
+
+<script>
+function calculateMissing() {
+    const input = document.getElementById("numbersInput").value;
+    const numbers = input.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+    const fullList = Array.from({length: 100}, (_, i) => i + 1);
+    const missing = fullList.filter(n => !numbers.includes(n));
+    document.getElementById("result").innerText = missing.length
+        ? "Missing numbers:\n" + missing.join("\n")
+        : "No numbers are missing!";
+}
+</script>
+
+</body>
+</html>
