@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Missing Numbers Calculator</title>
 <style>
+  /* Reset useful for consistent sizing and centering */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+
   :root {
     --primary: #2563eb;
     --background: #f9fafb;
@@ -25,120 +29,82 @@
       --border: #374151;
       --result-bg: #1e293b;
     }
-
-    textarea, #result {
-      color: #f1f5f9;
-    }
-
-    button {
-      background-color: #3b82f6;
-    }
-
-    button:hover {
-      background-color: #2563eb;
-    }
   }
 
   body {
-    font-family: "Inter", system-ui, sans-serif;
-    background-color: var(--background);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: var(--background);
     color: var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    margin: 0;
     padding: 20px;
+    min-height: 100vh;
   }
 
   .card {
     background: var(--card-bg);
-    padding: 30px 25px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    max-width: 480px;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(16,24,40,0.08);
     width: 100%;
-    transition: background-color 0.3s, color 0.3s;
+    max-width: 520px;
+    transition: background 0.25s, color 0.25s;
   }
 
-  h2 {
-    margin-bottom: 10px;
-    font-size: 1.5rem;
-    text-align: center;
-  }
+  h2 { margin: 0 0 8px; text-align: center; font-size: 1.4rem; }
+  p { margin: 0 0 18px; color: var(--muted); text-align:center; }
 
-  p {
-    font-size: 0.95rem;
-    color: var(--muted);
-    text-align: center;
-    margin-bottom: 20px;
+  /* Ensure inputs don't overflow and are perfectly centered inside the card */
+  textarea, button, #result {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 0; /* prevents unexpected offset from default margins */
   }
 
   textarea {
-    width: 100%;
     height: 120px;
     padding: 12px;
     font-size: 0.95rem;
     border: 1px solid var(--border);
     border-radius: 8px;
     resize: vertical;
-    transition: border-color 0.2s, background-color 0.3s, color 0.3s;
-    background-color: var(--result-bg);
+    background: var(--result-bg);
+    transition: border-color 0.18s, background 0.18s, color 0.18s;
   }
 
-  textarea:focus {
-    border-color: var(--primary);
-    outline: none;
-  }
+  textarea:focus { outline: none; border-color: var(--primary); }
 
   button {
-    width: 100%;
-    margin-top: 15px;
+    margin-top: 14px;
     padding: 12px;
-    background-color: var(--primary);
-    color: white;
-    font-weight: 500;
-    border: none;
     border-radius: 8px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s, transform 0.1s;
+    transition: transform 0.08s, background 0.16s;
   }
 
-  button:hover {
-    background-color: #1d4ed8;
-  }
-
-  button:active {
-    transform: scale(0.98);
-  }
+  button:active { transform: scale(.997); }
+  button:hover { filter: brightness(.95); }
 
   #result {
-    margin-top: 20px;
-    white-space: pre-line;
-    background: var(--result-bg);
+    margin-top: 18px;
+    min-height: 44px;
     padding: 12px;
     border-radius: 8px;
-    font-size: 0.95rem;
     border: 1px solid var(--border);
-    min-height: 40px;
-    transition: background-color 0.3s, color 0.3s;
+    white-space: pre-line;
+    background: var(--result-bg);
   }
 
   @media (max-width: 600px) {
-    .card {
-      padding: 20px 15px;
-      border-radius: 12px;
-    }
-
-    textarea {
-      height: 100px;
-    }
-
-    button {
-      padding: 10px;
-      font-size: 0.95rem;
-    }
+    .card { padding: 20px; border-radius: 12px; }
+    textarea { height: 100px; }
+    button { padding: 10px; }
   }
 </style>
 </head>
@@ -149,26 +115,28 @@
   <p>Enter numbers from 1–100, separated by commas.</p>
 
   <textarea id="numbersInput" placeholder="e.g. 35, 19, 84, 53, ..."></textarea>
-  <button onclick="calculateMissing()">Calculate Missing Numbers</button>
+  <button id="calcBtn">Calculate Missing Numbers</button>
 
-  <div id="result"></div>
+  <div id="result" aria-live="polite"></div>
 </div>
 
 <script>
+document.getElementById('calcBtn').addEventListener('click', calculateMissing);
+
 function calculateMissing() {
   const input = document.getElementById("numbersInput").value;
   const numbers = input.split(',')
-    .map(n => parseInt(n.trim()))
-    .filter(n => !isNaN(n) && n >= 1 && n <= 100);
+    .map(n => parseInt(n.trim(), 10))
+    .filter(n => Number.isInteger(n) && n >= 1 && n <= 100);
 
-  const fullList = Array.from({ length: 100 }, (_, i) => i + 1);
-  const missing = fullList.filter(n => !numbers.includes(n));
+  const full = Array.from({length:100}, (_,i) => i+1);
+  const missing = full.filter(n => !numbers.includes(n));
 
   const result = document.getElementById("result");
   if (!numbers.length) {
     result.textContent = "Please enter at least one valid number between 1 and 100.";
   } else if (missing.length) {
-    result.textContent = `Missing numbers (${missing.length}):\n${missing.join(", ")}`;
+    result.textContent = `Missing numbers (${missing.length}):\n${missing.join(', ')}`;
   } else {
     result.textContent = "No numbers are missing!";
   }
