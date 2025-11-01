@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Missing Numbers Calculator</title>
 <style>
   :root {
@@ -14,6 +14,30 @@
     --border: #e5e7eb;
   }
 
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary: #3b82f6;
+      --background: #111827;
+      --card-bg: #1f2937;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #374151;
+    }
+
+    textarea, #result {
+      background-color: #1e293b;
+      color: #f1f5f9;
+    }
+
+    button {
+      background-color: #3b82f6;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+  }
+
   body {
     font-family: "Inter", system-ui, sans-serif;
     background-color: var(--background);
@@ -21,7 +45,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     padding: 20px;
   }
@@ -33,6 +57,7 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     max-width: 480px;
     width: 100%;
+    transition: background-color 0.3s, color 0.3s;
   }
 
   h2 {
@@ -95,6 +120,23 @@
     font-size: 0.95rem;
     border: 1px solid var(--border);
     min-height: 40px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  @media (max-width: 600px) {
+    .card {
+      padding: 20px 15px;
+      border-radius: 12px;
+    }
+
+    textarea {
+      height: 100px;
+    }
+
+    button {
+      padding: 10px;
+      font-size: 0.95rem;
+    }
   }
 </style>
 </head>
