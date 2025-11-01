@@ -5,31 +5,129 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Missing Numbers Calculator</title>
 <style>
-  body { font-family: Arial, sans-serif; padding: 20px; }
-  textarea { width: 100%; height: 100px; }
-  #result { margin-top: 20px; white-space: pre-line; }
-  button { margin-top: 10px; padding: 10px 20px; }
+  :root {
+    --primary: #2563eb;
+    --background: #f9fafb;
+    --card-bg: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+  }
+
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .card {
+    background: var(--card-bg);
+    padding: 30px 25px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    max-width: 480px;
+    width: 100%;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 120px;
+    padding: 12px;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    resize: vertical;
+    transition: border-color 0.2s;
+  }
+
+  textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    background-color: var(--primary);
+    color: white;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s, transform 0.1s;
+  }
+
+  button:hover {
+    background-color: #1d4ed8;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  #result {
+    margin-top: 20px;
+    white-space: pre-line;
+    background: #f3f4f6;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    min-height: 40px;
+  }
 </style>
 </head>
 <body>
 
-<h2>Missing Numbers Calculator (1–100)</h2>
-<p>Enter your numbers separated by commas:</p>
-<textarea id="numbersInput" placeholder="e.g. 35,19,84,53,..."></textarea>
-<br>
-<button onclick="calculateMissing()">Calculate Missing Numbers</button>
+<div class="card">
+  <h2>Missing Numbers Calculator</h2>
+  <p>Enter numbers from 1–100, separated by commas.</p>
 
-<div id="result"></div>
+  <textarea id="numbersInput" placeholder="e.g. 35, 19, 84, 53, ..."></textarea>
+  <button onclick="calculateMissing()">Calculate Missing Numbers</button>
+
+  <div id="result"></div>
+</div>
 
 <script>
 function calculateMissing() {
-    const input = document.getElementById("numbersInput").value;
-    const numbers = input.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-    const fullList = Array.from({length: 100}, (_, i) => i + 1);
-    const missing = fullList.filter(n => !numbers.includes(n));
-    document.getElementById("result").innerText = missing.length
-        ? "Missing numbers:\n" + missing.join("\n")
-        : "No numbers are missing!";
+  const input = document.getElementById("numbersInput").value;
+  const numbers = input.split(',')
+    .map(n => parseInt(n.trim()))
+    .filter(n => !isNaN(n) && n >= 1 && n <= 100);
+
+  const fullList = Array.from({ length: 100 }, (_, i) => i + 1);
+  const missing = fullList.filter(n => !numbers.includes(n));
+
+  const result = document.getElementById("result");
+  if (!numbers.length) {
+    result.textContent = "Please enter at least one valid number between 1 and 100.";
+  } else if (missing.length) {
+    result.textContent = `Missing numbers (${missing.length}):\n${missing.join(", ")}`;
+  } else {
+    result.textContent = "No numbers are missing!";
+  }
 }
 </script>
 
